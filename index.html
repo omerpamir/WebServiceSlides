@@ -161,6 +161,7 @@
                     <li>Implementation Examples</li>
                     <li>When to Use Each Technology</li>
                     <li>Best Practices</li>
+                    <li>Future Roadmap and Recommendations</li>
                     <li>Summary and Q&A</li>
                 </ol>
             </div>
@@ -189,6 +190,9 @@
                         </ul>
                     </li>
                 </ul>
+                
+                <h3>API Protocols Evolution in SAP ABAP</h3>
+                <p>Each protocol serves distinct purposes, with varying levels of complexity, flexibility, and alignment with SAP's evolving architecture. Selection should be based on technical requirements, integration targets, and long-term strategic direction.</p>
             </div>
         </div>
 
@@ -209,9 +213,12 @@
                 <ul>
                     <li><strong>Strongly typed</strong> interface definition</li>
                     <li><strong>Protocol independent</strong> (can run over HTTP, SMTP, etc.)</li>
-                    <li>Built-in <strong>error handling</strong> (SOAP faults)</li>
+                    <li><strong>Built-in error handling</strong> (SOAP faults)</li>
                     <li><strong>WS-* standards</strong> support (WS-Security, WS-ReliableMessaging, etc.)</li>
                     <li><strong>Stateless</strong> by design, but can maintain state through headers</li>
+                    <li><strong>Strong security:</strong> Supports WS-Security for encryption, authentication, and compliance with enterprise security policies</li>
+                    <li><strong>ACID transactions:</strong> Ensures reliable, stateful operations for mission-critical processes like financial transactions</li>
+                    <li><strong>Formal contracts:</strong> WSDL files specify input/output parameters, enabling strict validation</li>
                 </ul>
             </div>
         </div>
@@ -236,6 +243,13 @@
                             <li>Supports both client and server scenarios</li>
                         </ul>
                     </li>
+                </ol>
+
+                <h3>Implementation Workflow</h3>
+                <ol>
+                    <li><strong>Service Creation:</strong> Use transaction code SOAMANAGER to generate SOAP web services from ABAP function modules</li>
+                    <li><strong>WSDL Generation:</strong> Expose service metadata via WSDL for client applications</li>
+                    <li><strong>Testing:</strong> Validate SOAP requests/responses using tools like SOAPUI or ABAP's built-in test utilities</li>
                 </ol>
 
                 <h3>Example: Creating a SOAP Service in ABAP</h3>
@@ -266,8 +280,46 @@ ENDCLASS.</code></pre>
             </div>
         </div>
 
-        <!-- Slide 6: RESTful APIs -->
+        <!-- Slide 6: SOAP Example Request -->
         <div class="slide" id="slide6">
+            <h2 class="slide-title">SOAP Example Request</h2>
+            <div class="slide-content">
+                <h3>Example SOAP Request</h3>
+                <pre><code>&lt;soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:sap-com:document:sap:soap:functions:mc-style"&gt;
+   &lt;soapenv:Header/&gt;
+   &lt;soapenv:Body&gt;
+      &lt;urn:ZGetCustomerDetails&gt;
+         &lt;CustomerID&gt;00012345&lt;/CustomerID&gt;
+      &lt;/urn:ZGetCustomerDetails&gt;
+   &lt;/soapenv:Body&gt;
+&lt;/soapenv:Envelope&gt;</code></pre>
+
+                <h3>Example SOAP Response</h3>
+                <pre><code>&lt;soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:sap-com:document:sap:soap:functions:mc-style"&gt;
+   &lt;soapenv:Header/&gt;
+   &lt;soapenv:Body&gt;
+      &lt;urn:ZGetCustomerDetailsResponse&gt;
+         &lt;Customer&gt;
+            &lt;CustomerID&gt;00012345&lt;/CustomerID&gt;
+            &lt;CustomerName&gt;ACME Corporation&lt;/CustomerName&gt;
+            &lt;City&gt;New York&lt;/City&gt;
+            &lt;Country&gt;US&lt;/Country&gt;
+         &lt;/Customer&gt;
+         &lt;Return&gt;
+            &lt;Type&gt;S&lt;/Type&gt;
+            &lt;Message&gt;Customer details retrieved successfully&lt;/Message&gt;
+         &lt;/Return&gt;
+      &lt;/urn:ZGetCustomerDetailsResponse&gt;
+   &lt;/soapenv:Body&gt;
+&lt;/soapenv:Envelope&gt;</code></pre>
+
+                <h3>Use Case</h3>
+                <p>Integrating SAP with legacy systems requiring transactional integrity, such as payment gateways, financial applications, and enterprise middleware solutions.</p>
+            </div>
+        </div>
+
+        <!-- Slide 7: RESTful APIs -->
+        <div class="slide" id="slide7">
             <h2 class="slide-title">RESTful APIs</h2>
             <div class="slide-content">
                 <h3>What is REST?</h3>
@@ -287,12 +339,15 @@ ENDCLASS.</code></pre>
                     <li><strong>Cacheable</strong> responses</li>
                     <li><strong>Client-server</strong> separation</li>
                     <li><strong>Layered system</strong> architecture</li>
+                    <li><strong>Lightweight:</strong> JSON payloads reduce parsing overhead compared to SOAP's XML</li>
+                    <li><strong>Statelessness:</strong> Each request contains all necessary context, simplifying horizontal scaling</li>
+                    <li><strong>Caching:</strong> HTTP caching mechanisms improve performance for read-heavy operations</li>
                 </ul>
             </div>
         </div>
 
-        <!-- Slide 7: REST in SAP ABAP -->
-        <div class="slide" id="slide7">
+        <!-- Slide 8: REST in SAP ABAP -->
+        <div class="slide" id="slide8">
             <h2 class="slide-title">REST in SAP ABAP</h2>
             <div class="slide-content">
                 <h3>Implementation Options</h3>
@@ -318,6 +373,13 @@ ENDCLASS.</code></pre>
                             <li>Transaction: SICF</li>
                         </ul>
                     </li>
+                </ol>
+
+                <h3>Implementation Workflow</h3>
+                <ol>
+                    <li><strong>HTTP Communication:</strong> Use class CL_HTTP_CLIENT or CL_REST_HTTP_CLIENT to call REST APIs</li>
+                    <li><strong>JSON Handling:</strong> Parse responses with /UI2/CL_JSON or transform data using XSLT</li>
+                    <li><strong>Security:</strong> Implement OAuth 2.0 or API keys via HTTP headers</li>
                 </ol>
 
                 <h3>Example: Creating a RESTful Service in ABAP</h3>
@@ -354,8 +416,47 @@ ENDCLASS.</code></pre>
             </div>
         </div>
 
-        <!-- Slide 8: OData Services -->
-        <div class="slide" id="slide8">
+        <!-- Slide 9: REST Example Call -->
+        <div class="slide" id="slide9">
+            <h2 class="slide-title">REST Example Call</h2>
+            <div class="slide-content">
+                <h3>Example REST Call from ABAP Client</h3>
+                <pre><code>DATA(lo_client) = cl_rest_http_client=>create_by_destination( 'E_INVOICING' ).
+lo_client->request->set_method( 'GET' ).
+lo_client->send( ).
+DATA(lv_json) = lo_client->response->get_cdata( ).</code></pre>
+
+                <h3>JSON Response Example</h3>
+                <pre><code>{
+  "customers": [
+    {
+      "id": "00012345",
+      "name": "ACME Corporation",
+      "city": "New York",
+      "country": "US",
+      "creditLimit": 10000
+    },
+    {
+      "id": "00012346",
+      "name": "Globex Inc",
+      "city": "Boston",
+      "country": "US",
+      "creditLimit": 5000
+    }
+  ],
+  "metadata": {
+    "count": 2,
+    "timestamp": "2025-03-07T10:15:30Z"
+  }
+}</code></pre>
+
+                <h3>Use Case</h3>
+                <p>Mobile applications retrieving SAP sales orders in real time, modern web frontends consuming SAP data, and lightweight integration scenarios with third-party SaaS solutions.</p>
+            </div>
+        </div>
+
+        <!-- Slide 10: OData Services -->
+        <div class="slide" id="slide10">
             <h2 class="slide-title">OData Services</h2>
             <div class="slide-content">
                 <h3>What is OData?</h3>
@@ -375,12 +476,15 @@ ENDCLASS.</code></pre>
                     <li><strong>Batching</strong> of multiple operations</li>
                     <li><strong>Pagination</strong> support</li>
                     <li><strong>Relationships</strong> between entities</li>
+                    <li><strong>Query options:</strong> $filter, $expand, and $select for client-driven data shaping</li>
+                    <li><strong>Metadata:</strong> $metadata endpoint describes entity models and relationships</li>
+                    <li><strong>Batch processing:</strong> Combine multiple operations in a single HTTP request</li>
                 </ul>
             </div>
         </div>
 
-        <!-- Slide 9: OData in SAP ABAP -->
-        <div class="slide" id="slide9">
+        <!-- Slide 11: OData in SAP ABAP -->
+        <div class="slide" id="slide11">
             <h2 class="slide-title">OData in SAP ABAP</h2>
             <div class="slide-content">
                 <h3>Implementation Options</h3>
@@ -405,6 +509,13 @@ ENDCLASS.</code></pre>
                             <li>Service registration and activation</li>
                         </ul>
                     </li>
+                </ol>
+
+                <h3>Implementation Workflow</h3>
+                <ol>
+                    <li><strong>Service Development:</strong> Use transaction SEGW to define OData entities and map them to CDS views or ABAP logic</li>
+                    <li><strong>Business Logic:</strong> Implement methods like GET_ENTITYSET in generated DPC_EXT classes</li>
+                    <li><strong>Testing:</strong> Validate services using the SAP Gateway Client (/IWFND/GW_CLIENT)</li>
                 </ol>
 
                 <h3>Example: Creating an OData Service with CDS Views</h3>
@@ -435,8 +546,44 @@ authorization master
             </div>
         </div>
 
-        <!-- Slide 10: Detailed Comparison -->
-        <div class="slide" id="slide10">
+        <!-- Slide 12: OData Example Query -->
+        <div class="slide" id="slide12">
+            <h2 class="slide-title">OData Example Query</h2>
+            <div class="slide-content">
+                <h3>Example OData Query</h3>
+                <pre><code>/odata/Categories?$expand=Products($orderby=Price desc;$top=5)</code></pre>
+
+                <p>This query:</p>
+                <ul>
+                    <li>Retrieves all Categories</li>
+                    <li>Expands the related Products for each category</li>
+                    <li>Orders the products by Price in descending order</li>
+                    <li>Limits to the top 5 products per category</li>
+                </ul>
+
+                <h3>More Query Examples</h3>
+                <pre><code># Filter for customers in a specific country
+/odata/Customers?$filter=Country eq 'US'
+
+# Select only specific fields
+/odata/Products?$select=ID,Name,Price
+
+# Pagination with skip and top
+/odata/Orders?$skip=20&$top=10
+
+# Complex filter with multiple conditions
+/odata/Invoices?$filter=Amount gt 1000 and Status eq 'Open'
+
+# Expand multiple navigation properties
+/odata/SalesOrders?$expand=Customer,Items,Partner</code></pre>
+
+                <h3>Use Case</h3>
+                <p>Fiori applications displaying aggregated supplier data with nested purchase orders, dashboards requiring complex data querying, and integration with SAP UI5 applications.</p>
+            </div>
+        </div>
+
+        <!-- Slide 13: Detailed Comparison -->
+        <div class="slide" id="slide13">
             <h2 class="slide-title">Detailed Comparison</h2>
             <div class="slide-content">
                 <table>
@@ -497,13 +644,25 @@ authorization master
                             <td>Shallow</td>
                             <td>Moderate</td>
                         </tr>
+                        <tr>
+                            <td><strong>Security</strong></td>
+                            <td>WS-Security, SAML</td>
+                            <td>OAuth 2.0, JWT</td>
+                            <td>Inherits REST security</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Standards</strong></td>
+                            <td>WSDL, WS-* specs</td>
+                            <td>HTTP methods, URI conventions</td>
+                            <td>OData v4/v2, REST principles</td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
         </div>
 
-        <!-- Slide 11: SOAP vs. REST vs. OData in SAP -->
-        <div class="slide" id="slide11">
+        <!-- Slide 14: SOAP vs. REST vs. OData in SAP -->
+        <div class="slide" id="slide14">
             <h2 class="slide-title">SOAP vs. REST vs. OData in SAP</h2>
             <div class="slide-content">
                 <h3>SOAP Advantages in SAP</h3>
@@ -513,6 +672,7 @@ authorization master
                     <li>Formal contract through WSDL</li>
                     <li>Comprehensive WS-* standards support</li>
                     <li>Better for complex transactions</li>
+                    <li>Legacy compatibility but declining SAP focus</li>
                 </ul>
 
                 <h3>REST Advantages in SAP</h3>
@@ -531,12 +691,13 @@ authorization master
                     <li>Standard approach for SAP Fiori applications</li>
                     <li>Balances standardization and simplicity</li>
                     <li>First-class support in SAP Gateway</li>
+                    <li>Central to ABAP RAP and S/4HANA Cloud</li>
                 </ul>
             </div>
         </div>
 
-        <!-- Slide 12: Implementation Examples: SOAP in ABAP -->
-        <div class="slide" id="slide12">
+        <!-- Slide 15: Implementation Examples: SOAP in ABAP -->
+        <div class="slide" id="slide15">
             <h2 class="slide-title">Implementation Examples: SOAP in ABAP</h2>
             <div class="slide-content">
                 <h3>Creating a SOAP Service using SOAMANAGER</h3>
@@ -571,8 +732,8 @@ ENDMETHOD.</code></pre>
             </div>
         </div>
 
-        <!-- Slide 13: Implementation Examples: REST in ABAP -->
-        <div class="slide" id="slide13">
+        <!-- Slide 16: Implementation Examples: REST in ABAP -->
+        <div class="slide" id="slide16">
             <h2 class="slide-title">Implementation Examples: REST in ABAP</h2>
             <div class="slide-content">
                 <h3>Creating a RESTful Service with ICF</h3>
@@ -605,8 +766,8 @@ ENDMETHOD.</code></pre>
             </div>
         </div>
 
-        <!-- Slide 14: Implementation Examples: OData in ABAP -->
-        <div class="slide" id="slide14">
+        <!-- Slide 17: Implementation Examples: OData in ABAP -->
+        <div class="slide" id="slide17">
             <h2 class="slide-title">Implementation Examples: OData in ABAP</h2>
             <div class="slide-content">
                 <h3>Creating an OData Service with SAP Gateway</h3>
@@ -641,8 +802,8 @@ ENDMETHOD.</code></pre>
             </div>
         </div>
 
-        <!-- Slide 15: When to Use Each Technology in SAP -->
-        <div class="slide" id="slide15">
+        <!-- Slide 18: When to Use Each Technology in SAP -->
+        <div class="slide" id="slide18">
             <h2 class="slide-title">When to Use Each Technology in SAP</h2>
             <div class="slide-content">
                 <h3>Choose SOAP When:</h3>
@@ -653,6 +814,7 @@ ENDMETHOD.</code></pre>
                     <li>Advanced security requirements exist</li>
                     <li>Reliable messaging is needed</li>
                     <li>Operation-centric rather than resource-centric</li>
+                    <li>B2B integrations requiring ACID compliance</li>
                 </ul>
 
                 <h3>Choose REST When:</h3>
@@ -676,8 +838,8 @@ ENDMETHOD.</code></pre>
             </div>
         </div>
 
-        <!-- Slide 16: Best Practices for Web Services in SAP ABAP -->
-        <div class="slide" id="slide16">
+        <!-- Slide 19: Best Practices for Web Services in SAP ABAP -->
+        <div class="slide" id="slide19">
             <h2 class="slide-title">Best Practices for Web Services in SAP ABAP</h2>
             <div class="slide-content">
                 <h3>General Best Practices</h3>
@@ -704,13 +866,14 @@ ENDMETHOD.</code></pre>
                     <li>Consider ETags for concurrency</li>
                     <li>Implement pagination for large results</li>
                     <li>Use proper content negotiation</li>
+                    <li>Leverage CDS Views with OData to optimize data retrieval via AMDP or database hints</li>
                 </ul>
             </div>
         </div>
 
-        <!-- Slide 17: Implementation Recommendations -->
-        <div class="slide" id="slide17">
-            <h2 class="slide-title">Implementation Recommendations</h2>
+        <!-- Slide 20: Recommendations and Future Roadmap -->
+        <div class="slide" id="slide20">
+            <h2 class="slide-title">Recommendations and Future Roadmap</h2>
             <div class="slide-content">
                 <h3>For New Developments:</h3>
                 <ul>
@@ -736,6 +899,14 @@ ENDMETHOD.</code></pre>
                     </li>
                 </ul>
 
+                <h3>Strategic Recommendations:</h3>
+                <ul>
+                    <li><strong>Adopt OData v4</strong> for new projects due to SAP's roadmap emphasis</li>
+                    <li><strong>Migrate Legacy SOAP</strong> to REST/OData using tools like DreamFactory or SAP Gateway</li>
+                    <li><strong>Leverage CDS Views</strong> with OData to optimize data retrieval via AMDP or database hints</li>
+                    <li><strong>Prioritize Security</strong>: Use WS-Security for SOAP and OAuth 2.0 for REST/OData</li>
+                </ul>
+
                 <h3>For Existing Systems:</h3>
                 <ul>
                     <li>Consider your consumers' capabilities</li>
@@ -745,8 +916,8 @@ ENDMETHOD.</code></pre>
             </div>
         </div>
 
-        <!-- Slide 18: Summary -->
-        <div class="slide" id="slide18">
+        <!-- Slide 21: Summary -->
+        <div class="slide" id="slide21">
             <h2 class="slide-title">Summary</h2>
             <div class="slide-content">
                 <ul>
@@ -771,20 +942,15 @@ ENDMETHOD.</code></pre>
                             <li>SAP's strategic choice for modern applications</li>
                         </ul>
                     </li>
-                    <li><strong>Selection criteria</strong>:
-                        <ul>
-                            <li>System landscape</li>
-                            <li>Consumer requirements</li>
-                            <li>Complexity of operations</li>
-                            <li>Future maintainability</li>
-                        </ul>
-                    </li>
                 </ul>
+                
+                <h3>Conclusion</h3>
+                <p>SOAP, REST, and OData each occupy distinct niches in SAP ABAP ecosystems. While SOAP remains relevant for transactional integrations, REST and OData dominate modern architectures due to their flexibility and alignment with cloud-first strategies. Developers should prioritize OData v4 for future-proofing SAP integrations while maintaining SOAP for legacy compliance. By understanding these protocols' strengths, teams can design scalable, secure, and performant interfaces across hybrid SAP landscapes.</p>
             </div>
         </div>
 
-        <!-- Slide 19: Thank You -->
-        <div class="slide" id="slide19">
+        <!-- Slide 22: Thank You -->
+        <div class="slide" id="slide22">
             <h2 class="slide-title">Thank You!</h2>
             <div class="slide-content">
                 <h3>Questions?</h3>
@@ -807,7 +973,7 @@ ENDMETHOD.</code></pre>
         </div>
         
         <div class="slide-indicator">
-            <span id="currentSlide">1</span>/<span id="totalSlides">19</span>
+            <span id="currentSlide">1</span>/<span id="totalSlides">22</span>
         </div>
     </div>
 
